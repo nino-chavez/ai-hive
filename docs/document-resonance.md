@@ -3,7 +3,7 @@
 **Date:** 2026-04-08
 **Inputs analyzed:**
 1. Original research synthesis (Distributed Architectures for Collaborative Agentic Intelligence)
-2. Slack conversation with Jeremy King (Composer creator)
+2. Slack conversation with a practitioner (Composer creator)
 3. Gemini Deep Research follow-up analysis
 4. Architecture design document (v0.1.0-draft)
 5. Tool verification results (Switchman, Conductor, OpenClaw)
@@ -12,11 +12,11 @@
 
 ## What Resonated Across All Sources
 
-These ideas appeared independently in multiple inputs — the research paper, Jeremy's real-world experience, the Gemini analysis, and the architecture design process. Convergence across independent sources is the strongest signal that an idea is load-bearing.
+These ideas appeared independently in multiple inputs — the research paper, The practitioner's real-world experience, the Gemini analysis, and the architecture design process. Convergence across independent sources is the strongest signal that an idea is load-bearing.
 
 ### 1. The Solo Composer Problem is Solved; the Multi-Composer Problem is Not
 
-Every source agrees. Jeremy said it plainly: "for solo dev orchestrating virtual coworkers, the problem is pretty much solved." The research paper documents the tooling (CrewAI, AutoGen, LangGraph). Switchman, Conductor, and Claude Code subagents all serve this use case. The market is saturated with solo orchestration.
+Every source agrees. The practitioner said it plainly: "for solo dev orchestrating virtual coworkers, the problem is pretty much solved." The research paper documents the tooling (CrewAI, AutoGen, LangGraph). Switchman, Conductor, and Claude Code subagents all serve this use case. The market is saturated with solo orchestration.
 
 The gap is when multiple solo devs — each with their own agent swarm — need to work the same codebase. No production-grade tool fully addresses this as of April 2026. Switchman gets closest with file locking, but file locking is a conflict *prevention* mechanism, not a coordination *intelligence* layer.
 
@@ -24,9 +24,9 @@ The gap is when multiple solo devs — each with their own agent swarm — need 
 
 ### 2. Territory Over Hierarchy
 
-Jeremy's "department" metaphor, the research paper's module isolation patterns, and the architecture's territory model all converge on the same structure: humans own bounded domains, interact through interfaces, and make autonomous decisions within their scope.
+The practitioner's "department" metaphor, the research paper's module isolation patterns, and the architecture's territory model all converge on the same structure: humans own bounded domains, interact through interfaces, and make autonomous decisions within their scope.
 
-The hierarchical model (one lead delegates to all) appeared in the research but was consistently deprioritized in practice. Jeremy doesn't use a lead — he *is* the single composer. The architecture doc recommends territory with consensus fallback. No source advocated for pure hierarchy in a peer-team context.
+The hierarchical model (one lead delegates to all) appeared in the research but was consistently deprioritized in practice. The practitioner doesn't use a lead — he *is* the single composer. The architecture doc recommends territory with consensus fallback. No source advocated for pure hierarchy in a peer-team context.
 
 **Resonance strength: Strong.** The department/territory model is the consensus architectural choice.
 
@@ -40,7 +40,7 @@ The alternative (agents sharing a working directory) was never seriously propose
 
 ### 4. The Repository as Communication Channel
 
-The "Drop-box" pattern (decisions.md as append-only log) appeared in the research paper, was reinforced by Gemini, and became a first-class entity in the architecture (the `decisions` table + `hive/log_decision` tool). Jeremy's workflow implicitly relies on this — his agents share context through the repo, not through a message bus.
+The "Drop-box" pattern (decisions.md as append-only log) appeared in the research paper, was reinforced by Gemini, and became a first-class entity in the architecture (the `decisions` table + `hive/log_decision` tool). The practitioner's workflow implicitly relies on this — his agents share context through the repo, not through a message bus.
 
 The deeper insight: treating the repo as the canonical communication channel means the coordination layer degrades gracefully. If the blackboard goes down, decisions.md still exists. If the MCP server dies, CLAUDE.md and AGENTS.md still guide agent behavior.
 
@@ -48,11 +48,11 @@ The deeper insight: treating the repo as the canonical communication channel mea
 
 ### 5. Fit Analysis is a Real, Unsolved Gap
 
-Jeremy independently identified this: "nothing is in place to say 'This is already implemented.'" Gemini's analysis flagged it. The architecture doc turned it into the `hive/fit_check` tool. No existing tool (including Switchman) addresses this.
+The practitioner independently identified this: "nothing is in place to say 'This is already implemented.'" Gemini's analysis flagged it. The architecture doc turned it into the `hive/fit_check` tool. No existing tool (including Switchman) addresses this.
 
 In a multi-composer environment, the duplication risk scales with the number of composers. Two people independently asking their agents to "add auth middleware" is the canonical failure mode. Fit analysis is the mechanism that catches this *before* work starts, not after conflicting PRs appear.
 
-**Resonance strength: Strong.** Independently identified by Jeremy (practitioner), Gemini (research), and the architecture (design).
+**Resonance strength: Strong.** Independently identified by The practitioner (practitioner), Gemini (research), and the architecture (design).
 
 ---
 
@@ -75,7 +75,7 @@ The original research paper presented hierarchical orchestration (Lead-Teammate 
 
 The research paper assumed a heavy stack: Redis for short-term memory, vector databases for long-term memory, dedicated MCP servers on Cloud Run, S2 streams for coordination. The architecture doc deliberately stripped this down to Supabase + Vercel.
 
-Jeremy's workflow validates the minimal approach — his Composer system doesn't use Redis or vector stores. It works because the repo and git history provide enough context for a solo composer.
+The practitioner's workflow validates the minimal approach — his Composer system doesn't use Redis or vector stores. It works because the repo and git history provide enough context for a solo composer.
 
 **Why the tension matters:** The multi-composer case may genuinely need more infrastructure than the solo case. Shared memory across machines is a harder problem than local context. But over-engineering at MVP is the classic project killer.
 
@@ -93,7 +93,7 @@ The Gemini research positioned Switchman, Conductor, and OpenClaw as components 
 
 The architecture declares "agent-framework agnostic" as a design principle. But in practice, the MCP server tools (`hive/register_session`, `hive/heartbeat`) assume agents that can make HTTP calls and maintain a heartbeat loop. Not all agent frameworks support this equally.
 
-Jeremy's Composer is custom-built and deeply integrated with his specific workflow. Switchman explicitly supports Claude Code, Cursor, Codex, Windsurf, and Aider — a curated list, not "any agent."
+The practitioner's Composer is custom-built and deeply integrated with his specific workflow. Switchman explicitly supports Claude Code, Cursor, Codex, Windsurf, and Aider — a curated list, not "any agent."
 
 **Why the tension matters:** True agnosticism may mean lowest-common-denominator tooling. Deep integration with specific agents (especially Claude Code, given its MCP client support) could deliver a much better experience.
 
@@ -119,7 +119,7 @@ The architecture handles *implementation* isolation (worktrees, locks, file_scop
 
 ### 4. Real-Time Human Communication
 
-The architecture focuses on agent-to-blackboard-to-agent communication. But the humans need to talk to each other too. Jeremy's conversation happened on Slack. The architecture doesn't integrate with human communication channels — no Slack/Discord bridge, no notification routing to the right human when a decision needs arbitration.
+The architecture focuses on agent-to-blackboard-to-agent communication. But the humans need to talk to each other too. The practitioner's conversation happened on Slack. The architecture doesn't integrate with human communication channels — no Slack/Discord bridge, no notification routing to the right human when a decision needs arbitration.
 
 ### 5. The "Veto" Mechanism
 
@@ -134,9 +134,9 @@ The consensus model mentions an "objection window" for cross-domain decisions, b
 - **Noise:** Medium. The paper is comprehensive but academic — it describes all patterns without strongly recommending one. The cosine similarity formula and vector math are correct but irrelevant at MVP.
 - **Unique contribution:** The term "hive mind" and the framing of the problem as a paradigm shift, not a tool gap.
 
-### Jeremy King Conversation
+### Practitioner Conversation
 - **Signal:** Very high. Three sentences from a practitioner who actually built and uses a composer system delivered more actionable insight than the entire research paper.
-- **Noise:** Near zero. Everything Jeremy said was grounded in real experience.
+- **Noise:** Near zero. Everything The practitioner said was grounded in real experience.
 - **Unique contributions:** "The problem is pretty much solved" (scoping the gap), "model it like departments" (the territory pattern), "nothing says 'this is already implemented'" (fit analysis), "devs evolve agent configurations" (human role evolution).
 
 ### Gemini Deep Research

@@ -2,7 +2,7 @@
 
 **Version:** 0.1.0-draft
 **Date:** 2026-04-08
-**Author:** Nino Chavez
+**Author:** N. Chavez
 **Status:** RFC (Request for Comments)
 
 ---
@@ -507,7 +507,7 @@ As of April 2026, the multi-composer problem is being actively tackled by severa
 |------|-------------|------------------------|
 | **Switchman** ([switchman.dev](https://switchman.dev), `npm i -g switchman-dev`) | File locking, task queues, merge confidence reviews. Works with Claude Code, Cursor, Codex, Windsurf, Aider. Ships as npm CLI + MCP server. | **Closest competitor.** Solves file-level conflict prevention. AI Hive goes further with shared decision memory, department contracts, fit analysis, and a persistent blackboard. Switchman could potentially be a building block *within* a hive. |
 | **Microsoft Conductor** ([github.com/microsoft/conductor](https://github.com/microsoft/conductor)) | YAML-defined multi-agent workflows. Parallel execution, human-in-the-loop gates, evaluator-optimizer loops, real-time DAG visualization. Python CLI. MIT license. | **Complementary.** Conductor defines *how* agents execute workflows. AI Hive defines *how multiple humans coordinate* those workflows. A composer could use Conductor internally while the hive coordinates across composers. |
-| **OpenClaw Command Center** ([github.com/jontsai/openclaw-command-center](https://github.com/jontsai/openclaw-command-center)) | Real-time dashboard for the OpenClaw agent framework. Session monitoring, token cost tracking ("LLM Fuel Gauges"), system health. Node.js, localhost. | **Reference architecture for Phase 3.** OpenClaw itself is a personal AI assistant framework (WhatsApp/Telegram/Slack), not a coding agent. But the Command Center's dashboard pattern — sessions, costs, health — is exactly what AI Hive's observability layer needs. |
+| **OpenClaw Command Center** ([github.com/openclaw-command-center](https://github.com/openclaw-command-center)) | Real-time dashboard for the OpenClaw agent framework. Session monitoring, token cost tracking ("LLM Fuel Gauges"), system health. Node.js, localhost. | **Reference architecture for Phase 3.** OpenClaw itself is a personal AI assistant framework (WhatsApp/Telegram/Slack), not a coding agent. But the Command Center's dashboard pattern — sessions, costs, health — is exactly what AI Hive's observability layer needs. |
 
 ### 8.2 Solo Composer Tools (Solved Problem)
 
@@ -515,7 +515,7 @@ As of April 2026, the multi-composer problem is being actively tackled by severa
 |------|-------------|----------------------|
 | **Claude Code** (subagents) | One human spawns parallel agents via `Agent` tool; worktree isolation built-in | Single session, single human, no cross-machine coordination |
 | **Cursor** (background agents) | Multi-file agent mode within one IDE | Tied to one IDE instance, no shared state |
-| **Jeremy King's Composer** | Custom orchestration — human defines work, agents execute autonomously | Solo workflow; no protocol for a second composer to join |
+| **Composer** (custom) | Custom orchestration — human defines work, agents execute autonomously | Solo workflow; no protocol for a second composer to join |
 | **Aider** | Terminal-based AI pair programming with git integration | Single-agent, single-human |
 
 ### 8.3 Multi-Agent Frameworks (Different Abstraction Layer)
@@ -636,7 +636,7 @@ Switchman and Conductor have moved into the center of the chart — they handle 
 
 > "For solo dev orchestrating virtual coworkers (agents), the problem is pretty much solved. But how do you organize and manage multiple solo devs doing the same thing?"
 
-This section addresses the core unsolved problem that AI Hive targets — informed by conversations with Jeremy King (creator of Composer, a solo-dev orchestration system).
+This section addresses the core unsolved problem that AI Hive targets — informed by conversations with a practitioner (creator of Composer, a solo-dev orchestration system).
 
 ### 10.1 Solo Composer vs. Hive: The Spectrum
 
@@ -666,7 +666,7 @@ graph LR
     style Multi-Composer Hive fill:#064e3b,color:#fff
 ```
 
-The solo composer pattern (Jeremy's model, Cursor background agents, Claude Code subagents) is solved because there's one brain making all decisions. The multi-composer problem introduces **distributed consensus** — multiple humans with potentially conflicting visions, each commanding their own agent swarm.
+The solo composer pattern (The practitioner's model, Cursor background agents, Claude Code subagents) is solved because there's one brain making all decisions. The multi-composer problem introduces **distributed consensus** — multiple humans with potentially conflicting visions, each commanding their own agent swarm.
 
 ### 10.2 Three Coordination Models
 
@@ -711,7 +711,7 @@ graph TB
 
 ### 10.3 The Department Analogy
 
-Jeremy's insight — "model orchestration like an enterprise team with departments" — maps directly to the territory model with one addition: **departments have interfaces**.
+The practitioner's insight — "model orchestration like an enterprise team with departments" — maps directly to the territory model with one addition: **departments have interfaces**.
 
 ```mermaid
 graph TB
@@ -754,7 +754,7 @@ When a contract changes, all consuming departments are notified via Supabase Rea
 
 ### 10.4 Fit Analysis — "Is This Already Built?"
 
-Jeremy identified a gap in his own system: nothing prevents an agent from reimplementing something that already exists. In a multi-composer hive, this risk multiplies — Human B's agent might build a utility that Human A's agent already shipped.
+The practitioner identified a gap in his own system: nothing prevents an agent from reimplementing something that already exists. In a multi-composer hive, this risk multiplies — Human B's agent might build a utility that Human A's agent already shipped.
 
 The hive addresses this at two levels:
 
@@ -784,7 +784,7 @@ sequenceDiagram
 
 ### 10.5 The Human Role Evolution
 
-Jeremy's observation — "devs no longer create the actual product, they evolve agent configurations and work on the plumbing" — describes where this is heading. In the hive model, each human's role shifts:
+The practitioner's observation — "devs no longer create the actual product, they evolve agent configurations and work on the plumbing" — describes where this is heading. In the hive model, each human's role shifts:
 
 | Traditional Role | Hive Role |
 |-----------------|-----------|
@@ -794,7 +794,7 @@ Jeremy's observation — "devs no longer create the actual product, they evolve 
 | Resolve merge conflicts | Define territory boundaries, maintain contracts |
 | Maintain docs | Maintain constitution files (CLAUDE.md, AGENTS.md) |
 
-The humans become **department leads** — they spend most of their time on requirements, ideation, and quality gates. The "plumbing" Jeremy mentioned is the constitution: tuning agent instructions, adjusting file scopes, refining decision-making rules.
+The humans become **department leads** — they spend most of their time on requirements, ideation, and quality gates. The "plumbing" The practitioner mentioned is the constitution: tuning agent instructions, adjusting file scopes, refining decision-making rules.
 
 ---
 
