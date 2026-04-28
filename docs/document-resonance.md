@@ -12,7 +12,7 @@
 
 ## What Resonated Across All Sources
 
-These ideas appeared independently in multiple inputs — the research paper, The practitioner's real-world experience, the Gemini analysis, and the architecture design process. Convergence across independent sources is the strongest signal that an idea is load-bearing.
+These ideas appeared independently across the research paper, the practitioner's real-world experience, the Gemini analysis, and the architecture design process.
 
 ### 1. The Solo Composer Problem is Solved; the Multi-Composer Problem is Not
 
@@ -42,7 +42,7 @@ The alternative (agents sharing a working directory) was never seriously propose
 
 The "Drop-box" pattern (decisions.md as append-only log) appeared in the research paper, was reinforced by Gemini, and became a first-class entity in the architecture (the `decisions` table + `hive/log_decision` tool). The practitioner's workflow implicitly relies on this — his agents share context through the repo, not through a message bus.
 
-The deeper insight: treating the repo as the canonical communication channel means the coordination layer degrades gracefully. If the blackboard goes down, decisions.md still exists. If the MCP server dies, CLAUDE.md and AGENTS.md still guide agent behavior.
+Treating the repo as the canonical communication channel means the coordination layer degrades gracefully. If the blackboard goes down, decisions.md still exists. If the MCP server dies, CLAUDE.md and AGENTS.md still guide agent behavior.
 
 **Resonance strength: Strong.** This aligns with the architecture's Design Principle #5 (graceful degradation).
 
@@ -52,7 +52,7 @@ The practitioner independently identified this: "nothing is in place to say 'Thi
 
 In a multi-composer environment, the duplication risk scales with the number of composers. Two people independently asking their agents to "add auth middleware" is the canonical failure mode. Fit analysis is the mechanism that catches this *before* work starts, not after conflicting PRs appear.
 
-**Resonance strength: Strong.** Independently identified by The practitioner (practitioner), Gemini (research), and the architecture (design).
+**Resonance strength: Strong.** Independently identified by the practitioner, Gemini, and the architecture.
 
 ---
 
@@ -77,7 +77,7 @@ The research paper assumed a heavy stack: Redis for short-term memory, vector da
 
 The practitioner's workflow validates the minimal approach — his Composer system doesn't use Redis or vector stores. It works because the repo and git history provide enough context for a solo composer.
 
-**Why the tension matters:** The multi-composer case may genuinely need more infrastructure than the solo case. Shared memory across machines is a harder problem than local context. But over-engineering at MVP is the classic project killer.
+**Why the tension matters:** Shared memory across machines is a harder problem than local context, so the multi-composer case will need more infrastructure than the solo case. But over-engineering at MVP is the classic project killer.
 
 **Resolution:** The architecture's phased approach. Phase 1 uses Supabase only. Phase 4 adds pgvector for semantic memory. Infrastructure scales with validated need, not theoretical completeness.
 
@@ -107,7 +107,7 @@ The practitioner's Composer is custom-built and deeply integrated with his speci
 
 No source describes what happens when a new composer joins a hive that's already in progress. The constitution files (CLAUDE.md, AGENTS.md) help, but they don't capture the full context of "why did we make this decision 3 days ago?" The decisions table helps, but reading 200 decisions is not onboarding.
 
-**This is a Phase 4 problem** (cross-session context via vector search), but it deserves earlier thinking. A `hive/onboard` tool that generates a project summary from decisions + task history could be a Phase 2 addition.
+**This is a Phase 4 problem** (cross-session context via vector search), but it deserves earlier thinking. A `hive/onboard` tool that generates a project summary from decisions + task history belongs in Phase 2.
 
 ### 2. Cost Management Across Composers
 
@@ -135,8 +135,7 @@ The consensus model mentions an "objection window" for cross-domain decisions, b
 - **Unique contribution:** The term "hive mind" and the framing of the problem as a paradigm shift, not a tool gap.
 
 ### Practitioner Conversation
-- **Signal:** Very high. Three sentences from a practitioner who actually built and uses a composer system delivered more actionable insight than the entire research paper.
-- **Noise:** Near zero. Everything The practitioner said was grounded in real experience.
+- **Signal:** Very high. Three sentences from someone who built and uses a composer system delivered more than the entire research paper.
 - **Unique contributions:** "The problem is pretty much solved" (scoping the gap), "model it like departments" (the territory pattern), "nothing says 'this is already implemented'" (fit analysis), "devs evolve agent configurations" (human role evolution).
 
 ### Gemini Deep Research
